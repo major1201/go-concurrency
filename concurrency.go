@@ -70,6 +70,9 @@ func (jg *JobGroup) Start() {
 func (jg *JobGroup) runPayload(payload *Payload) {
 	f := func() {
 		defer func() {
+			jg.mu.Lock()
+			defer jg.mu.Unlock()
+
 			jg.currWeight -= payload.weight
 			jg.sem.Release(int64(payload.weight))
 
